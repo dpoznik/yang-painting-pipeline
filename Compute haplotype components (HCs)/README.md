@@ -41,12 +41,12 @@ Note that if ``full_chunklength_UKBall.txt.gz`` has more than 2^31 rows (the lim
 library(data.table)  
 library(Matrix)  
 library(sparsesvd)  
-nsnp=487409  
+nind=487409  
 number_of_HCs=100  
 cat("Begin reading data\n")  
 cl <- fread("full_chunklength_UKBall.txt.gz")  
 cat("Begin making sparse matrix\n")  
-A <- sparseMatrix(cl$V1, cl$V2, x = log10(cl$V3+1), dims=c(nsnp,nsnp))  
+A <- sparseMatrix(cl$V1, cl$V2, x = log10(cl$V3+1), dims=c(nind,nind))  
 cat("Begin svd \n")  
 res<-sparsesvd(A,rank=number_of_HCs)  
 cat("Begin calculate HCs\n")  
