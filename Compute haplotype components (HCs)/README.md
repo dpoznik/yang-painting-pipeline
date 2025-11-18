@@ -1,6 +1,8 @@
 # Pipeline to compute haplotype components (HCs)
 Here we describe the pipeline for computing haplotype components (HCs) through [PBWTpaint](https://github.com/richarddurbin/pbwt). We should have a genotype file from each chromosome, i.e. 22 genotype files in total. Let i denote the chromosome index, the input files are named as ``chr${i}_UKBall.vcf.gz``.
 
+This pipeline will generate a matrix of HCs, one row per individual and $k$ columns, one for each HC you choose to retain. The correct choice of $k$ is likely to be higher than for PCs because they don't overfil genomic correlations, instead identifying increasingly low-variance relatedness structure.
+
 ## Step 1: Run PBWTpaint for each chromosome  
 The first step is to run the below command for each chromosome (i from 1 to 22, you may split it into 22 array jobs):  
 
