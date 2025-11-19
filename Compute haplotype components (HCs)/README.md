@@ -10,17 +10,20 @@ The first step is to run the below command for each chromosome ($i$ from 1 to 22
 pbwt -readVcfGT chr${i}_UKBall.vcf.gz -paintSparse chr${i}_UKBall 100 2 500
 ```
 
-The explanation of each parameter can be found by typing `pbwt`. In specific, the last parameter controls the sparsity of matches (the larger, the sparser), which is important for datasets with large numbers of individuals, such as the UK Biobank.
-
-For other input formats please just follow the pbwt instructions on reading data.
+The explanation of each parameter can be found by typing `pbwt`. The last parameter controls the sparsity of matches (the larger, the sparser), which is important for datasets with large numbers of individuals, such as the UK Biobank. For other input formats please just follow the pbwt instructions on reading data.
 
 This command generates `chr${i}_UKBall.chunklengths.s.out.gz` for $i$ from 1 to 22.
 
 ## Step 2: Generate the overall chunk length matrix
 
-The next step is to do a "weighted" sum of each entry of the $N \times N$ sparse matrix ($N$ is the number of individuals), because PBWTpaint reports the chunk length based on the number of SNPs while it should be based on the genetic distance. Here we provide an example **C++** code `combine_chunklength.cpp`. Please **replace row 197-198 with the number of SNPs for each chromosome in the dataset**, (row 199-201 is the genetic distance in centiMorgan for each chromosome, which do not need to change if you use a standard recombination map), and **in line 203 replace 487409 with the actual $N$**. If you use a different file name, please also **replace row 214 and 218 with the actual file name**.
+The next step is to do a "weighted" sum of each entry of the $N \times N$ sparse matrix ($N$ is the number of individuals), because PBWTpaint reports the chunk length based on the number of SNPs, whereas it should be based on the genetic distance. Here we provide an example C++ code, `combine_chunklength.cpp`. Please replace:
+- Lines 197-198 with the number of SNPs for each chromosome in your dataset
+- Line 203 with the sample size for your study
+- Lines 214 and 218 with the filenames for your study
 
-Note that to run this step, we require chunklength files `chr${i}_UKBall.chunklengths.s.out.gz` to be generated from `-paintSparse` command form `pbwt`, which have 3 columns: the first two columns are individual index (integer, starting from 1), and the 3rd column is the chunk length.
+Note that lines 199-201 set the genetic length in centiMorgans for each chromosome. These do not need to change if you use a standard recombination map.
+
+To run this step, we require chunklength files `chr${i}_UKBall.chunklengths.s.out.gz` to be generated from `-paintSparse` command form `pbwt`, which have 3 columns: the first two columns are individual index (integer, starting from 1), and the 3rd column is the chunk length.
 
 Please ensure `gzstream.C` and `gzstream.h` are in the same directory as `combine_chunklength.cpp`, and then compile with:
 
