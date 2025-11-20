@@ -200,7 +200,7 @@ int main() {
                              166.35,180.91,158.22,174.68,125.70,120.20,141.35,134.05,
                              128.78,117.71,107.73,108.28,62.79,74.10};
   
-  int nsnp=487409;
+  int nind=487409;
   
   // Compute weight
   vector<double> weight;
@@ -210,7 +210,7 @@ int main() {
     weight.push_back(val);
   }
   
-  hMat cl(nsnp,nsnp,0.0);
+  hMat cl(nind,nind,0.0);
   readdatafirst("chr1_UKBall.chunklengths.s.out.gz",cl,weight[0]);
   
   for (int i = 1; i <= 21; ++i) {
@@ -221,7 +221,7 @@ int main() {
   
   // Save the merged data to a file
   ogzstream outFile("full_chunklength_UKBall.txt.gz");
-  for (int i=0; i<nsnp; ++i) {
+  for (int i=0; i<nind; ++i) {
     vector<int> twj=cl.m[i].k;
     for(int j=0;j<twj.size();++j){
       double val=cl.m[i].get(twj[j]);
