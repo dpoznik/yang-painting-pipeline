@@ -21,30 +21,30 @@ The next step is to do a "weighted" sum of each entry of the $N \times N$ sparse
 - Line 203 with the sample size for your study
 - Lines 214 and 218 with the filenames for your study
 
-Note that lines 199-201 set the genetic length in centiMorgans for each chromosome. These do not need to change if you use a standard recombination map.
+Note that lines 199-201 set the genetic length in centimorgans for each chromosome. These do not need to change if you use a standard recombination map.
 
-To run this step, we require chunklength files `chr${i}_UKBall.chunklengths.s.out.gz` to be generated from `-paintSparse` command form `pbwt`, which have 3 columns: the first two columns are individual index (integer, starting from 1), and the 3rd column is the chunk length.
+This step uses the 3-column chunklength files generated in Step 1: `chr${i}_UKBall.chunklengths.s.out.gz`. The first two columns are individual one-based indices, and the third column is the chunk length.
 
-Please ensure `gzstream.C` and `gzstream.h` are in the same directory as `combine_chunklength.cpp`, and then compile with:
+Please ensure that `gzstream.C` and `gzstream.h` are in the same directory as `combine_chunklength.cpp`, and then compile with:
 
 ```
 g++ combine_chunklength.cpp -o combine -lz -lpthread -llapack -lblas -std=c++0x -g -O3
 ```
 
-After which you run with
+After which you run with:
 
 ```
 ./combine
 ```
 
-This may take few hours to run, and afterwards we obtain the output `full_chunklength_UKBall.txt.gz`. The first two columns are the individual indices (IND1 and IND2), and the third column is the expected chunk length that IND1 is copied from IND2 in centiMorgan. This output file represents the sparse chunk length matrix from all-vs-all painting.
+This may take few hours to run. Upon completion, we obtain the output `full_chunklength_UKBall.txt.gz`. The first two columns are the individual indices (IND1 and IND2), and the third column is the expected chunk length that IND1 has copied from IND2 in centimorgans. This output file represents the sparse chunk length matrix from all-vs-all painting.
 
 
 ## Step 3: Compute HCs via SVD
 
-The last step is to do SVD to obtain HCs. Here we provide an example code in R, please **set `nind` with your sample size**.
+The last step is to do SVD to obtain HCs. Here we provide an example code in R. Please **set `nind` with your sample size**.
 
-Note that if `full_chunklength_UKBall.txt.gz` has more than 2^31 rows (the limit of R), then we need to remove some weakly associated individual pairs (i.e., removing the rows with the smallest numbers of the last column of `full_chunklength_UKBall.txt.gz`) and re-weight (each row of the sparse matrix should sum up to be the total genetic distance in centiMorgan, which is 3545.04 in the standard genetic map that we use), with e.g. data chunking approach.
+Note that if `full_chunklength_UKBall.txt.gz` has more than 2^31 rows (the limit of R), then we need to remove some weakly associated individual pairs (i.e., remove the rows with the smallest numbers of the last column of `full_chunklength_UKBall.txt.gz`) and re-weight (each row of the sparse matrix should sum up to be the total genetic distance in centimorgans, which is 3545.04 in the standard genetic map that we use), with e.g. data chunking approach.
 
 ```
 library(data.table)
